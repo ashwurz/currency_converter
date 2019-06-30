@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -66,6 +67,12 @@ class _HomeState extends State<Home> {
     euroController.text = "";
   }
 
+  void connectionRetry() {
+    setState(() {
+      build(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,10 +98,29 @@ class _HomeState extends State<Home> {
             default:
               if (snapshot.hasError) {
                 return Center(
-                  child: Text(
-                    "Erro ao carregar Dados...",
-                    style: TextStyle(color: Colors.amber, fontSize: 25.0),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Não foi possivel obter dados...",
+                        style: TextStyle(color: Colors.amber, fontSize: 25.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 50.0,
+                          child: RaisedButton(
+                            onPressed: connectionRetry,
+                            child: Text(
+                              "Tentar Reconexão!",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            color: Colors.amber,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 );
               } else {
